@@ -88,55 +88,10 @@ class OrganizationsController extends AppController
      */
     public function index()
     {
-        $user = $this->loadModel("Users")->findById($this->request->session()->read('Auth.User.id'))->first();
+        $organizations = $this->Organizations->find()->where(['isValidated' => 1, 'isRejected' => 0])->toArray();
 
-        if (!is_null($user) && $user->hasPermissionName(['list_organizations_all'])) {
-            $this->adminIndex();
-        } else {
-            $data = $this->DataTables
-                ->find(
-                    'Organizations',
-                    [
-                        'fields' =>
-                            [
-                                'id',
-                                'name',
-                                'website',
-                                'isValidated',
-                                'isRejected'
-                            ],
-                            'join' =>
-                            [
-                                'table' => 'organizations_owners',
-                                'alias' => 'o',
-                                'type' => 'LEFT',
-                                'conditions' => 'o.organization_id = Organizations.id'
-                            ],
-                            'conditions' =>
-                            [
-                                'OR' =>
-                                    [
-                                        [
-                                            'isRejected' => 0,
-                                            'isValidated' => 1,
-                                        ],
-                                        [
-                                            'isRejected' => 0,
-                                            'o.user_id' => (!is_null($user) ? $user->getId() : '')
-                                        ]
-                                    ]
-                            ],
-                            'group' => 'Organizations.id'
-                    ]
-                );
-
-            $this->set(
-                [
-                    'data' => $data,
-                    '_serialize' => array_merge($this->viewVars['_serialize'], ['data'])
-                ]
-            );
-        }
+        $this->set(compact('organizations'));
+        $this->set('_serialize', ['organizations']);
     }
 
     /**
