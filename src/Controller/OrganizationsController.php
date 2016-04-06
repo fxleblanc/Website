@@ -80,6 +80,22 @@ class OrganizationsController extends AppController
         $this->loadComponent('RequestHandler');
     }
 
+    /**
+     * SetFilter method
+     *
+     * @param string $key   key
+     * @param string $value value
+     *
+     * @return void
+     */
+    private function _setFilter($key, $value)
+    {
+        if (!empty($value)) {
+            $this->request->session()->write('filter.organization.' . $key, $value);
+        } else {
+            $this->request->session()->delete('filter.organization.' . $key);
+        }
+    }
 
     /**
      * Index method
@@ -88,7 +104,20 @@ class OrganizationsController extends AppController
      */
     public function index()
     {
-        $organizations = $this->Organizations->find()->where(['isValidated' => 1, 'isRejected' => 0])->toArray();
+        $session = $this->request->session();
+        if ($this->request->is(['post', 'put', 'patch'])) {
+            $this->_setFilter('name', $this->request->data['name']);
+        }
+
+        $name = $session->read('filter.organization.name');
+
+        $query = $this->Organizations->find()->where(['isValidated' => 1, 'isRejected' => 0]);
+
+        if ($name) {
+            $query->where(['name' => $name]);
+        }
+
+        $organizations = $this->paginate($query);
 
         $this->set(compact('organizations'));
         $this->set('_serialize', ['organizations']);
