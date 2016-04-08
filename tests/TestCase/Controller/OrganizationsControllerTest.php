@@ -735,4 +735,21 @@ class OrganizationsControllerTest extends IntegrationTestCase
         $this->get('/organizations/myOrganizations');
         $this->assertResponseSuccess();
     }
+
+    /**
+     * Test Index with organization name filter
+     *
+     * @return void
+     */
+    public function testIndexOrganizationName()
+    {
+        $name = "Org4";
+        $data = [
+            'name' => $name
+        ];
+        $this->post('/organizations/', $data);
+
+        $this->assertResponseSuccess();
+        $this->assertResponseContains("Org4");
+    }
 }
