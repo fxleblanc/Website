@@ -17,3 +17,7 @@ Vous pouvez suivre l'avancée du projet sur notre [dashboard](https://waffle.io/
 # Prototype
 
 Nous disposons d'un prototype sur [Axure](http://nlw8u5.axshare.com/#p=dashboard)
+
+# Wiki
+
+Pour comprendre le fonctionnement de la maison, vous pouvez consulter note [wiki](http://wiki.maisonlogiciellibre.org/doku.php?id=en:start)
