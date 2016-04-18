@@ -752,4 +752,23 @@ class OrganizationsControllerTest extends IntegrationTestCase
         $this->assertResponseSuccess();
         $this->assertResponseContains("Org4");
     }
+
+
+    /**
+     * Test index - delete name
+     *
+     * @return void
+     */
+    public function testIndexNameDelete()
+    {
+        $name = "Org4";
+        $data = [
+            'name' => $name
+        ];
+        $this->post('/organizations/', $data);
+        $this->post('/organizations/');
+
+        $this->assertResponseSuccess();
+        $this->assertResponseContains("Org4");
+    }
 }
